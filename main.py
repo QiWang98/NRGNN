@@ -14,7 +14,7 @@ parser.add_argument('--hidden_size', type=int, default=100, help='the size of hi
 parser.add_argument('--batch_size', type=int, default=100, help='input batch size')
 parser.add_argument('--epoch', type=int, default=20, help='the number of epochs to train for')
 parser.add_argument('--sample_num', type=int, default=12)
-parser.add_argument('--GNN', default='GGNN', help='GGNN/GCN/GAT')
+parser.add_argument('--GNN', default='GCN', help='GGNN/GCN/GAT')
 parser.add_argument('--lr', type=float, default=0.001, help='learning rate')
 parser.add_argument('--l2', type=float, default=1e-5, help='l2 penalty')
 parser.add_argument('--lr_dc', type=float, default=0.1, help='learning rate decay rate')
