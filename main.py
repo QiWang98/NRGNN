@@ -4,11 +4,15 @@ import time
 import argparse
 import os
 import logging
+
+import torch.cuda
+
 from model import *
 from utils import handle_adj_weight
 from Datasets import SessionData
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--noise_level', type=float, default=0.0, help='Ablation experiment, the level of noise')
 parser.add_argument('--dataset', default='sample', help='sample/Tmall/yoochoose/Nowplaying')
 parser.add_argument('--hidden_size', type=int, default=100, help='the size of hidden layers')
 parser.add_argument('--batch_size', type=int, default=100, help='input batch size')
@@ -141,8 +145,8 @@ def main():
         logger.info('\tRecall@20:\t%.4f\tMRR@20:\t%.4f\tEpoch:\t%d,\t%d' % (
                     best_result[0], best_result[1], best_epoch[0], best_epoch[1]))
         bad_counter += 1 - flag
-        if bad_counter >= opt.patience:
-            break
+        # if bad_counter >= opt.patience:
+        #     break
 
     logger.info('-'*50)
     end = time.time()
@@ -154,4 +158,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # if opt.dataset == "Nowplaying":
+    #     torch.cuda.set_device(1)
     main()

@@ -38,8 +38,8 @@ class RNGCL(nn.Module):
 
         self.loss_function = nn.CrossEntropyLoss()
         self.optimizer = torch.optim.Adam(self.parameters(), lr=opt.lr, weight_decay=opt.l2)
-        self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=opt.lr_dc_step, gamma=opt.lr_dc)
-        # self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=opt.lr_dc_step)
+        # self.scheduler = torch.optim.lr_scheduler.StepLR(self.optimizer, step_size=opt.lr_dc_step, gamma=opt.lr_dc)
+        self.scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(self.optimizer, T_max=opt.lr_dc_step)
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -52,6 +52,8 @@ class RNGCL(nn.Module):
         batch_size = mask.shape[0]
         seq_lens = mask.shape[1]
         x_embed = self.embedding(data.x).squeeze()
+        if self.training:
+            x_embed = x_embed + trans_to_cuda(torch.randn(x_embed.size()) * self.opt.noise_level)  # Ablation experiment
 
         global_pre, last_item_pre = self.nei_pool(x_embed, data, self.adj_all, self.weight_all)
         session_pre, gcl_loss = self.session_gcl(x_embed, data)

@@ -81,10 +81,25 @@ class SessionGraphCL(nn.Module):
     def forward(self, x_embed, data):
         edge_index, batch = data.edge_index, data.batch
         mask = data.mask.unsqueeze(-1)
-
-        random_noise = torch.rand_like(x_embed)
-        x_embed_cl = x_embed + torch.sign(torch.randn_like(x_embed)) * F.normalize(random_noise, dim=-1) * self.opt.eps
-
+        """
+        # drop_edges
+        edge_num = edge_index.shape[-1]
+        edge_mask = torch.rand((edge_num,)) >= int(edge_num * self.opt.drop_edges) / edge_num
+        edge_index_cl = edge_index[:, edge_mask]
+        node_embed = self.leaky_relu(self.gcn(x_embed, edge_index)) + x_embed
+        node_embed_cl = self.leaky_relu(self.gcn(x_embed, edge_index_cl)) + x_embed
+        # drop_nodes
+        num_nodes = data.num_nodes
+        num_remove_nodes = int(num_nodes * self.opt.drop_nodes)
+        remove_nodes = trans_to_cuda(torch.randint(0, num_nodes, (num_remove_nodes,)))
+        nodes_mask = torch.logical_or(torch.isin(edge_index[0], remove_nodes),
+                                      torch.isin(edge_index[1], remove_nodes))
+        edge_index_cl = edge_index[:, ~nodes_mask]
+        node_embed = self.leaky_relu(self.gcn(x_embed, edge_index)) + x_embed
+        node_embed_cl = self.leaky_relu(self.gcn(x_embed, edge_index_cl)) + x_embed
+        """
+        random_noise = torch.randn_like(x_embed)
+        x_embed_cl = x_embed + F.normalize(random_noise, dim=-1) * self.opt.eps
         if self.opt.GNN == "GGNN":
             node_embed = self.ggnn(x_embed, edge_index) + x_embed
             node_embed_cl = self.ggnn(x_embed_cl, edge_index) + x_embed_cl
@@ -98,7 +113,6 @@ class SessionGraphCL(nn.Module):
             node_embed_cl = self.gat_2(node_embed_cl, edge_index) + x_embed_cl
         else:
             raise "No GNN is specified"
-
         gcl_loss = self.InfoNCE(node_embed, node_embed_cl)
 
         section = torch.bincount(data.batch)
