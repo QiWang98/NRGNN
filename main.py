@@ -154,6 +154,4 @@ def main():
 
 
 if __name__ == '__main__':
-    if opt.dataset == "Nowplaying":
-        torch.cuda.set_device(1)
     main()
