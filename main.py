@@ -115,7 +115,7 @@ def main():
     test_data = SessionData(os.path.join(cur_dir, 'datasets', opt.dataset), phrase='test')
     adj, weight = handle_adj_weight(adj, weight, num_node, opt.sample_num)
 
-    model = trans_to_cuda(RNGCL(opt, num_node, adj, weight))  # init model
+    model = trans_to_cuda(NRGNN(opt, num_node, adj, weight))  # init model
 
     logger.info(opt)
     start = time.time()

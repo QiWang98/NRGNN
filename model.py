@@ -10,9 +10,9 @@ from torch_geometric.loader import DataLoader
 from utils import trans_to_cuda, trans_to_cpu, NeighborPooling, SessionGraphCL
 
 
-class RNGCL(nn.Module):
+class NRGNN(nn.Module):
     def __init__(self, opt, num_node, adj_all, weight_all):
-        super(RNGCL, self).__init__()
+        super(NRGNN, self).__init__()
         self.opt = opt
 
         self.batch_size = opt.batch_size

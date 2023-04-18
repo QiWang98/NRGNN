@@ -3,7 +3,7 @@ import pickle
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--dataset', default='yoochoose', help='sample/Tmall/yoochoose/Nowplaying')
+parser.add_argument('--dataset', default='sample', help='sample/Tmall/yoochoose/Nowplaying')
 parser.add_argument('--sample_num', type=int, default=12)
 parser.add_argument('--k_hop', type=int, default=1)
 opt = parser.parse_args()
