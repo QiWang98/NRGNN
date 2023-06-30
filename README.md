@@ -16,7 +16,7 @@ Data preprocessing:
 The code for data preprocessing can refer to [SR-GNN](https://github.com/CRIPAC-DIG/SR-GNN).
 
 Train and evaluate the model:
-
+~~~~
 python build_graph.py --dataset=Tmall
 python main.py --dataset=diginetica
-
+~~~~
