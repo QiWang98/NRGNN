@@ -18,5 +18,5 @@ The code for data preprocessing can refer to [SR-GNN](https://github.com/CRIPAC-
 Train and evaluate the model:
 ```
 python build_graph.py --dataset=Tmall
-python main.py --dataset=diginetica
+python main.py --dataset=Tmall
 ```
